@@ -13,9 +13,11 @@
   <ItemGroup>
     <ClCompile Include="..\..\src\bvh.cpp" />
     <ClCompile Include="..\..\src\perfume.cpp" />
+    <ClCompile Include="..\..\src\wav.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\bvh.h" />
+    <ClInclude Include="..\..\src\wav.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{77D300F0-4771-4FAC-A987-9178B3ED2DBE}</ProjectGuid>
