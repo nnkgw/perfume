@@ -8,7 +8,8 @@
 #include <string.h>
 #include <stdio.h>
 
-#include "BVH.h"
+#include "bvh.h"
+#include "wav.h"
 
 #if defined(WIN32)
 #include <GL/glut.h>
@@ -29,15 +30,29 @@ struct sModel{
   float time;
 };
 
+struct sSound{
+  CWav* wav;
+};
+
 sModel g_Model[eModelNum];
+sSound g_Sound;
 
 const char* BVH_FILE[] = { "aachan.bvh",
                            "kashiyuka.bvh",
                            "nocchi.bvh"     };
+const char* WAV_FILE = "Perfume_globalsite_sound.wav";
 
 void load_bvh(sModel* model, const char* fn){
-  int ret = model->bvh->Load( fn );
-  if ( ret != 0 ){
+  int ret = model->bvh->Load(fn);
+  if (ret != 0) {
+    printf( "cant read %s file!\n", fn );
+    exit(0);
+  }
+}
+
+void load_wav(sSound* sound, const char* fn){
+  int ret = sound->wav->Load(fn);
+  if (ret != 0) {
     printf( "cant read %s file!\n", fn );
     exit(0);
   }
@@ -74,14 +89,16 @@ void init() {
     g_Model[i].time = 0.0f;
     load_bvh(&g_Model[i], BVH_FILE[i]);
   }
+  g_Sound.wav = new CWav();
+  load_wav(&g_Sound, WAV_FILE);
 }
 
 void display(void){
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
   gluLookAt(0.0, 5.0, -10.0, 0.0, 0.0f, 0.0, 0.0, 1.0, 0.0); // eye(x,y,z), tgt(x,y,z), up(x,y,z)
+
 #if 0
   GLfloat mat[] = {1.0, 0.0, 0.0, 1.0};
   glMaterialfv(GL_FRONT, GL_DIFFUSE, mat);
@@ -99,10 +116,36 @@ void display(void){
   material[2].b = 1.0f;
   for (int i = 0; i < eModelNum; i++){
     int frame = static_cast<int>(g_Model[ i ].time / g_Model[ i ].bvh->GetFrameTime());
-    frame = (frame % g_Model[i].bvh->GetFrameNum());
+    if (frame > g_Model[i].bvh->GetFrameNum()){
+      frame -= g_Model[i].bvh->GetFrameNum();
+      g_Model[i].time = frame * g_Model[i].bvh->GetFrameTime();
+    }
     g_Model[i].bvh->RenderPosture(frame, 0.01f, &material[i]);
   }
 #endif
+
+  glMatrixMode(GL_PROJECTION);
+  glPushMatrix();
+  glLoadIdentity();
+  gluOrtho2D( 0.0, 1.0f, 1.0f, 0.0 );
+  glMatrixMode( GL_MODELVIEW );
+  glPushMatrix();
+  glLoadIdentity();
+  for(int i = 0; i < 100; i++){
+    float wave_height_l = ( g_Sound.wav->Get( g_Model[ 0 ].time + i     * 0.001f ) + 1.0f ) / 2.0f;
+    float wave_height_r = ( g_Sound.wav->Get( g_Model[ 0 ].time + (i+1) * 0.001f ) + 1.0f ) / 2.0f;
+    float base_height = -3.0f;
+    glColor3d( 1.0f, 1.0f, 1.0f);
+    glBegin(GL_LINES);
+      glVertex2d( 0.1f + 0.008f *     i, 0.9f - wave_height_l * 0.1f );
+      glVertex2d( 0.1f + 0.008f * (i+1), 0.9f - wave_height_r * 0.1f );
+    glEnd();
+  }
+  glMatrixMode( GL_PROJECTION );
+  glPopMatrix();
+  glMatrixMode( GL_MODELVIEW );
+  glPopMatrix();
+
   glutSwapBuffers();
 }
 
