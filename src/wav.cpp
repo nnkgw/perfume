@@ -5,6 +5,7 @@
 
 CWav::CWav() {
   memset(&m_PCM, 0, sizeof(sPCM));
+  memset(&m_AL,  0, sizeof(m_AL));
 }
 
 CWav::~CWav() {
@@ -17,6 +18,10 @@ CWav::~CWav() {
 }
 
 int CWav::Load(const char* fn) {
+  m_AL.buffer = alutCreateBufferFromFile("Perfume_globalsite_sound.wav");
+  alGenSources(1, &m_AL.source);
+  alSourcei(m_AL.source, AL_BUFFER, m_AL.buffer);
+
   FILE* fp = fopen(fn, "rb");
   if (!fp) { return -1; }
   char riff_chunk_id[4];
@@ -58,6 +63,7 @@ int CWav::Load(const char* fn) {
     m_PCM.R[i] = (double)data / 32768.0;
   }
   fclose(fp);
+  Play();
   return 0;
 }
 
@@ -65,4 +71,10 @@ float CWav::Get(float time){
   int index = static_cast<int>( time * m_PCM.sample_per_sec );
   index = ( index > m_PCM.length ) ? m_PCM.length : index;
   return (m_PCM.L[index] + m_PCM.R[index]) / 2.0f;
+}
+
+void CWav::Play() {
+  if (m_AL.source){
+    alSourcePlay(m_AL.source);
+  }
 }

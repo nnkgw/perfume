@@ -1,5 +1,7 @@
 #if defined(WIN32)
 #pragma comment(lib,"glut32.lib")
+#pragma comment(lib,"OpenAL32.lib")
+#pragma comment(lib,"alut.lib")
 #ifndef _DEBUG
 #pragma comment(linker, "/subsystem:\"windows\" /entry:\"mainCRTStartup\"")
 #endif // _DEBUG
@@ -7,12 +9,14 @@
 
 #include <string.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 #include "bvh.h"
 #include "wav.h"
 
 #if defined(WIN32)
 #include <GL/glut.h>
+#include <AL/alut.h>
 #elif defined(__APPLE__) || defined(MACOSX)
 #include <GLUT/glut.h>
 #endif // MACOSX
@@ -58,7 +62,7 @@ void load_wav(sSound* sound, const char* fn){
   }
 }
 
-void init() {
+void app_init() {
   GLfloat ambient[]  = {0.2f, 0.2f, 0.2f, 1.0f};
   GLfloat diffuse[]  = {0.5f, 0.5f, 0.5f, 1.0f};
   GLfloat specular[] = {1.0f, 1.0f, 1.0f, 1.0f};
@@ -93,6 +97,10 @@ void init() {
   load_wav(&g_Sound, WAV_FILE);
 }
 
+void app_exit( void ) { 
+  alutExit();
+}
+
 void display(void){
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   glMatrixMode(GL_MODELVIEW);
@@ -119,6 +127,7 @@ void display(void){
     if (frame > g_Model[i].bvh->GetFrameNum()){
       frame -= g_Model[i].bvh->GetFrameNum();
       g_Model[i].time = frame * g_Model[i].bvh->GetFrameTime();
+      g_Sound.wav->Play();
     }
     g_Model[i].bvh->RenderPosture(frame, 0.01f, &material[i]);
   }
@@ -167,11 +176,14 @@ void idle(){
 }
 
 int main(int argc, char* argv[]){
+  alutInit(&argc, argv);
+  atexit(app_exit);
+
   glutInit(&argc, argv);
   glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
   glutInitWindowSize(640, 480);
   glutCreateWindow(argv[0]);
-  init();
+  app_init();
   glutReshapeFunc(reshape);
   glutDisplayFunc(display);
   glutIdleFunc(idle);
