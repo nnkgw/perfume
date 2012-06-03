@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <math.h>
 #include "wav.h"
 
 CWav::CWav() {
@@ -18,10 +19,6 @@ CWav::~CWav() {
 }
 
 int CWav::Load(const char* fn) {
-  m_AL.buffer = alutCreateBufferFromFile("Perfume_globalsite_sound.wav");
-  alGenSources(1, &m_AL.source);
-  alSourcei(m_AL.source, AL_BUFFER, m_AL.buffer);
-
   FILE* fp = fopen(fn, "rb");
   if (!fp) { return -1; }
   char riff_chunk_id[4];
@@ -55,14 +52,33 @@ int CWav::Load(const char* fn) {
   m_PCM.play_time = m_PCM.length / fmt_bytes_per_sec;
   m_PCM.L = (double*)malloc(m_PCM.length * sizeof(double));
   m_PCM.R = (double*)malloc(m_PCM.length * sizeof(double));
+  m_PCM.raw = (short*)malloc(m_PCM.length * 2 * sizeof(short));
+  int idx = 0;
   for(int i = 0; i < m_PCM.length; i++) {
     short data;
     fread(&data, 2, 1, fp);
     m_PCM.L[i] = (double)data / 32768.0;
+    m_PCM.raw[idx++] = data;
     fread(&data, 2, 1, fp);
     m_PCM.R[i] = (double)data / 32768.0;
+    m_PCM.raw[idx++] = data;
   }
   fclose(fp);
+#if 1
+  m_AL.buffer = alutCreateBufferFromFile("Perfume_globalsite_sound.wav");
+#else
+  alBufferData(m_AL.buffer, AL_FORMAT_STEREO16, m_PCM.raw, m_PCM.length * 2 * sizeof(ALshort), 44100);
+  //const int freq = 10000 , Hz = 440;
+  //ALshort data[freq/Hz];
+  //for (int i = 0; i < freq/Hz ; ++i) {
+  //  data[i] = 32767 * sin(i * 3.14159 * 2 * Hz / freq);
+  //}
+  //alBufferData(m_AL.buffer, AL_FORMAT_MONO16, data, freq/Hz*sizeof(ALshort), freq );
+  alSourcei(m_AL.source, AL_LOOPING, AL_TRUE );
+#endif
+  alGenSources(1, &m_AL.source);
+  alSourcei(m_AL.source, AL_BUFFER, m_AL.buffer);
+  //alSourcei(m_AL.source, AL_LOOPING, AL_TRUE);
   Play();
   return 0;
 }

@@ -14,6 +14,7 @@ private:
   struct sPCM{
     double* L;
     double* R;
+    short*  raw;
     long    length;
     long    sample_per_sec;
     float   play_time;

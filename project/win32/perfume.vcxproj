@@ -48,15 +48,15 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(OPENAL_SDK)\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(OPENAL_SDK)\libs\Win32;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(OPENAL_SDK)\include;$(ALUT)\include;$(GLUT);$(IncludePath)</IncludePath>
+    <LibraryPath>$(OPENAL_SDK)\libs\Win32;$(ALUT)\lib;$(GLUT);$(LibraryPath)</LibraryPath>
     <ReferencePath>$(ReferencePath)</ReferencePath>
     <ExecutablePath>$(ExecutablePath)</ExecutablePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(OPENAL_SDK)\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(OPENAL_SDK)\libs\Win32;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(OPENAL_SDK)\include;$(ALUT)\include;$(GLUT);$(IncludePath)</IncludePath>
+    <LibraryPath>$(OPENAL_SDK)\libs\Win32;$(ALUT)\lib;$(GLUT);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
