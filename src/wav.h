@@ -1,8 +1,13 @@
 #ifndef _WAV_H_
 #define _WAV_H_
 
+#if defined(WIN32)
 #include <al.h>
 #include <alc.h>
+#elif defined(__APPLE__) || defined(MACOSX)
+#include <OpenAL/al.h>
+#include <OpenAL/alc.h>
+#endif
 
 class CWav{
 public:

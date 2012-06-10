@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		222CB403152AF8C000532832 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 222CB402152AF8C000532832 /* OpenGL.framework */; };
 		222CB405152AF8D300532832 /* GLUT.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 222CB404152AF8D300532832 /* GLUT.framework */; };
+		2232D2A115848D3700DF1F14 /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2232D2A015848D3700DF1F14 /* OpenAL.framework */; };
 		226DECCC15302A80007095B8 /* perfume.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 226DECCB15302A80007095B8 /* perfume.cpp */; };
 		226DECCE15302AD8007095B8 /* bvh.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 226DECCD15302AD8007095B8 /* bvh.cpp */; };
 		22F8F23C1539258600DD5E20 /* wav.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 22F8F23B1539258600DD5E20 /* wav.cpp */; };
@@ -30,6 +31,7 @@
 		222CB3F5152AF86100532832 /* perfume */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = perfume; sourceTree = BUILT_PRODUCTS_DIR; };
 		222CB402152AF8C000532832 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		222CB404152AF8D300532832 /* GLUT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLUT.framework; path = System/Library/Frameworks/GLUT.framework; sourceTree = SDKROOT; };
+		2232D2A015848D3700DF1F14 /* OpenAL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenAL.framework; path = System/Library/Frameworks/OpenAL.framework; sourceTree = SDKROOT; };
 		226DECCB15302A80007095B8 /* perfume.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = perfume.cpp; path = ../../src/perfume.cpp; sourceTree = SOURCE_ROOT; };
 		226DECCD15302AD8007095B8 /* bvh.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = bvh.cpp; path = ../../src/bvh.cpp; sourceTree = SOURCE_ROOT; };
 		22F8F23B1539258600DD5E20 /* wav.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = wav.cpp; path = ../../src/wav.cpp; sourceTree = SOURCE_ROOT; };
@@ -40,6 +42,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2232D2A115848D3700DF1F14 /* OpenAL.framework in Frameworks */,
 				222CB405152AF8D300532832 /* GLUT.framework in Frameworks */,
 				222CB403152AF8C000532832 /* OpenGL.framework in Frameworks */,
 			);
@@ -51,6 +54,7 @@
 		222CB3EA152AF86100532832 = {
 			isa = PBXGroup;
 			children = (
+				2232D2A015848D3700DF1F14 /* OpenAL.framework */,
 				222CB404152AF8D300532832 /* GLUT.framework */,
 				222CB402152AF8C000532832 /* OpenGL.framework */,
 				222CB3F8152AF86100532832 /* src */,

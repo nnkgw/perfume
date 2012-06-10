@@ -15,8 +15,6 @@
 
 #if defined(WIN32)
 #include <GL/glut.h>
-#include <al.h>
-#include <alc.h>
 #elif defined(__APPLE__) || defined(MACOSX)
 #include <GLUT/glut.h>
 #endif // MACOSX
