@@ -94,6 +94,14 @@ float CWav::Get(float time){
   return (m_PCM.L[index] + m_PCM.R[index]) / 2.0f;
 }
 
+float CWav::GetPlayedTime(){
+  ALfloat sec = 0.0f;
+  if (m_AL.source){
+    alGetSourcef(m_AL.source, AL_SEC_OFFSET, &sec);
+  }
+  return sec;
+}
+
 void CWav::Play() {
   if (m_AL.source){
     alSourcePlay(m_AL.source);

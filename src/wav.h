@@ -15,6 +15,7 @@ public:
   ~CWav();
   int   Load(const char* fn);
   float Get(float time);
+  float GetPlayedTime();
   void  Play();
 private:
   struct sPCM{

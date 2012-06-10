@@ -135,8 +135,9 @@ void display(void){
   glPushMatrix();
   glLoadIdentity();
   for(int i = 0; i < 100; i++){
-    float wave_height_l = ( g_Sound.wav->Get( g_Model[ 0 ].time + i     * 0.001f ) + 1.0f ) / 2.0f;
-    float wave_height_r = ( g_Sound.wav->Get( g_Model[ 0 ].time + (i+1) * 0.001f ) + 1.0f ) / 2.0f;
+    float played_time = g_Sound.wav->GetPlayedTime();
+    float wave_height_l = ( g_Sound.wav->Get(played_time + i     * 0.001f ) + 1.0f ) / 2.0f;
+    float wave_height_r = ( g_Sound.wav->Get(played_time + (i+1) * 0.001f ) + 1.0f ) / 2.0f;
     float base_height = -3.0f;
     glColor3d( 1.0f, 1.0f, 1.0f);
     glBegin(GL_LINES);
