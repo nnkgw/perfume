@@ -1,7 +1,6 @@
 #if defined(WIN32)
 #pragma comment(lib,"glut32.lib")
 #pragma comment(lib,"OpenAL32.lib")
-#pragma comment(lib,"alut.lib")
 #ifndef _DEBUG
 #pragma comment(linker, "/subsystem:\"windows\" /entry:\"mainCRTStartup\"")
 #endif // _DEBUG
@@ -16,7 +15,8 @@
 
 #if defined(WIN32)
 #include <GL/glut.h>
-#include <AL/alut.h>
+#include <al.h>
+#include <alc.h>
 #elif defined(__APPLE__) || defined(MACOSX)
 #include <GLUT/glut.h>
 #endif // MACOSX
@@ -97,10 +97,6 @@ void app_init() {
   load_wav(&g_Sound, WAV_FILE);
 }
 
-void app_exit( void ) { 
-  alutExit();
-}
-
 void display(void){
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   glMatrixMode(GL_MODELVIEW);
@@ -176,9 +172,6 @@ void idle(){
 }
 
 int main(int argc, char* argv[]){
-  alutInit(&argc, argv);
-  atexit(app_exit);
-
   glutInit(&argc, argv);
   glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
   glutInitWindowSize(640, 480);

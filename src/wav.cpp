@@ -12,10 +12,21 @@ CWav::CWav() {
 CWav::~CWav() {
   if (m_PCM.L) {
     free(m_PCM.L);
+    m_PCM.L = 0;
   }
   if (m_PCM.R) {
     free(m_PCM.R);
+    m_PCM.R = 0;
   }
+  if (m_PCM.raw) {
+    free(m_PCM.raw);
+    m_PCM.raw = 0;
+  }
+  alDeleteSources(1, &m_AL.source);
+  alDeleteBuffers(1, &m_AL.buffer);
+  alcMakeContextCurrent(NULL);
+  alcDestroyContext(m_AL.context);
+  alcCloseDevice(m_AL.device);
 }
 
 int CWav::Load(const char* fn) {
@@ -64,21 +75,15 @@ int CWav::Load(const char* fn) {
     m_PCM.raw[idx++] = data;
   }
   fclose(fp);
-#if 1
-  m_AL.buffer = alutCreateBufferFromFile("Perfume_globalsite_sound.wav");
-#else
+
+  m_AL.device  = alcOpenDevice(NULL);
+  m_AL.context = alcCreateContext(m_AL.device, NULL);
+  alcMakeContextCurrent(m_AL.context);
+  alGenBuffers(1, &m_AL.buffer);
   alBufferData(m_AL.buffer, AL_FORMAT_STEREO16, m_PCM.raw, m_PCM.length * 2 * sizeof(ALshort), 44100);
-  //const int freq = 10000 , Hz = 440;
-  //ALshort data[freq/Hz];
-  //for (int i = 0; i < freq/Hz ; ++i) {
-  //  data[i] = 32767 * sin(i * 3.14159 * 2 * Hz / freq);
-  //}
-  //alBufferData(m_AL.buffer, AL_FORMAT_MONO16, data, freq/Hz*sizeof(ALshort), freq );
-  alSourcei(m_AL.source, AL_LOOPING, AL_TRUE );
-#endif
   alGenSources(1, &m_AL.source);
   alSourcei(m_AL.source, AL_BUFFER, m_AL.buffer);
-  //alSourcei(m_AL.source, AL_LOOPING, AL_TRUE);
+//  alSourcei(m_AL.source, AL_LOOPING, AL_TRUE );
   Play();
   return 0;
 }

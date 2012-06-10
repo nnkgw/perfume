@@ -1,7 +1,8 @@
 #ifndef _WAV_H_
 #define _WAV_H_
 
-#include <AL/alut.h>
+#include <al.h>
+#include <alc.h>
 
 class CWav{
 public:
@@ -20,8 +21,10 @@ private:
     float   play_time;
   };
   struct sAL{
-    ALuint buffer;
-    ALuint source;
+    ALCdevice*  device;
+    ALCcontext* context;
+    ALuint      buffer;
+    ALuint      source;
   };
   sPCM m_PCM;
   sAL  m_AL;
