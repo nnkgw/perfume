@@ -92,8 +92,20 @@ int CWav::GetHeader(const char* fn, long* length, long* sample_per_sec, float* p
   return 0;
 }
 
-int CWav::GetStream(const char* fn, float time) {
-
+int CWav::GetStream(const char* fn, long offset, short* buffer, int size) {
+  FILE* fp = fopen(fn, "rb");
+  if (!fp) { return -1; }
+  fseek(fp, offset, SEEK_SET);
+  int idx = 0;
+  for(int i = 0; i < size / 2; i++) {
+    short data;
+    fread(&data, 2, 1, fp);
+    buffer[idx++] = data;
+    fread(&data, 2, 1, fp);
+    buffer[idx++] = data;
+  }
+  fclose(fp);
+  return 0;
 }
 
 float CWav::GetPlayedTime() {

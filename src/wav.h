@@ -16,7 +16,7 @@ public:
   int   Load(const char* fn);
   float Get(float time);
   int   GetHeader(const char* fn, long* length, long* sample_per_sec, float* play_time, long* raw_offset);
-  int   GetStream(const char* fn, float time);
+  int   GetStream(const char* fn, long offset, short* buffer, int size);
   float GetPlayedTime();
   void  Play();
 private:
