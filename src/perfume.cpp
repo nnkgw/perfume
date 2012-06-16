@@ -47,7 +47,7 @@ const char* WAV_FILE = "Perfume_globalsite_sound.wav";
 void load_bvh(sModel* model, const char* fn){
   int ret = model->bvh->Load(fn);
   if (ret != 0) {
-    printf( "cant read %s file!\n", fn );
+    printf("cant read %s file!\n", fn);
     exit(0);
   }
 }
@@ -55,7 +55,7 @@ void load_bvh(sModel* model, const char* fn){
 void load_wav(sSound* sound, const char* fn){
   int ret = sound->wav->Load(fn);
   if (ret != 0) {
-    printf( "cant read %s file!\n", fn );
+    printf("cant read %s file!\n", fn);
     exit(0);
   }
 }
@@ -131,23 +131,23 @@ void display(void){
   glPushMatrix();
   glLoadIdentity();
   gluOrtho2D( 0.0, 1.0f, 1.0f, 0.0 );
-  glMatrixMode( GL_MODELVIEW );
+  glMatrixMode(GL_MODELVIEW);
   glPushMatrix();
   glLoadIdentity();
   for(int i = 0; i < 100; i++){
     float played_time = g_Sound.wav->GetPlayedTime();
-    float wave_height_l = ( g_Sound.wav->Get(played_time + i     * 0.001f ) + 1.0f ) / 2.0f;
-    float wave_height_r = ( g_Sound.wav->Get(played_time + (i+1) * 0.001f ) + 1.0f ) / 2.0f;
+    float wave_height_l = (g_Sound.wav->Get(played_time + i     * 0.001f) + 1.0f) / 2.0f;
+    float wave_height_r = (g_Sound.wav->Get(played_time + (i+1) * 0.001f) + 1.0f) / 2.0f;
     float base_height = -3.0f;
     glColor3d( 1.0f, 1.0f, 1.0f);
     glBegin(GL_LINES);
-      glVertex2d( 0.1f + 0.008f *     i, 0.9f - wave_height_l * 0.1f );
-      glVertex2d( 0.1f + 0.008f * (i+1), 0.9f - wave_height_r * 0.1f );
+      glVertex2d(0.1f + 0.008f *     i, 0.9f - wave_height_l * 0.1f);
+      glVertex2d(0.1f + 0.008f * (i+1), 0.9f - wave_height_r * 0.1f);
     glEnd();
   }
-  glMatrixMode( GL_PROJECTION );
+  glMatrixMode(GL_PROJECTION);
   glPopMatrix();
-  glMatrixMode( GL_MODELVIEW );
+  glMatrixMode(GL_MODELVIEW);
   glPopMatrix();
 
   glutSwapBuffers();
