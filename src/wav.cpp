@@ -22,6 +22,39 @@ CWav::~CWav() {
 }
 
 int CWav::Load(const char* fn) {
+  GetHeader(fn, &m_PCM.length, &m_PCM.sample_per_sec, &m_PCM.play_time, &m_PCM.raw_offset);
+  FILE* fp = fopen(fn, "rb");
+  if (!fp) { return -1; }
+  fseek(fp, m_PCM.raw_offset, SEEK_SET);
+  m_PCM.raw = (short*)malloc(m_PCM.length * 2 * sizeof(short));
+  int idx = 0;
+  for(int i = 0; i < m_PCM.length; i++) {
+    short data;
+    fread(&data, 2, 1, fp);
+    m_PCM.raw[idx++] = data;
+    fread(&data, 2, 1, fp);
+    m_PCM.raw[idx++] = data;
+  }
+  fclose(fp);
+  m_AL.device  = alcOpenDevice(NULL);
+  m_AL.context = alcCreateContext(m_AL.device, NULL);
+  alcMakeContextCurrent(m_AL.context);
+  alGenBuffers(1, &m_AL.buffer);
+  alBufferData(m_AL.buffer, AL_FORMAT_STEREO16, m_PCM.raw, m_PCM.length * 2 * sizeof(ALshort), 44100);
+  alGenSources(1, &m_AL.source);
+  alSourcei(m_AL.source, AL_BUFFER, m_AL.buffer);
+//  alSourcei(m_AL.source, AL_LOOPING, AL_TRUE );
+  Play();
+  return 0;
+}
+
+float CWav::Get(float time) {
+  int index = static_cast<int>( time * m_PCM.sample_per_sec );
+  index = ( index > m_PCM.length ) ? m_PCM.length : index;
+  return ((double)m_PCM.raw[index*2] + (double)m_PCM.raw[index*2+1]) / 32768.0f / 2.0f;
+}
+
+int CWav::GetHeader(const char* fn, long* length, long* sample_per_sec, float* play_time, long* raw_offset) {
   FILE* fp = fopen(fn, "rb");
   if (!fp) { return -1; }
   char riff_chunk_id[4];
@@ -51,38 +84,19 @@ int CWav::Load(const char* fn) {
   fread(data_chunk_ID, 1, 4, fp);
   long data_chunk_size;
   fread(&data_chunk_size, 4, 1, fp);
-  m_PCM.length = data_chunk_size/4;
-  m_PCM.play_time = m_PCM.length / fmt_bytes_per_sec;
-  m_PCM.raw = (short*)malloc(m_PCM.length * 2 * sizeof(short));
-  int idx = 0;
-  for(int i = 0; i < m_PCM.length; i++) {
-    short data;
-    fread(&data, 2, 1, fp);
-    m_PCM.raw[idx++] = data;
-    fread(&data, 2, 1, fp);
-    m_PCM.raw[idx++] = data;
-  }
+  *length = data_chunk_size / 4;
+  *play_time = *length / fmt_bytes_per_sec;
+  *sample_per_sec = fmt_samples_per_sec;
+  *raw_offset = ftell(fp);
   fclose(fp);
-
-  m_AL.device  = alcOpenDevice(NULL);
-  m_AL.context = alcCreateContext(m_AL.device, NULL);
-  alcMakeContextCurrent(m_AL.context);
-  alGenBuffers(1, &m_AL.buffer);
-  alBufferData(m_AL.buffer, AL_FORMAT_STEREO16, m_PCM.raw, m_PCM.length * 2 * sizeof(ALshort), 44100);
-  alGenSources(1, &m_AL.source);
-  alSourcei(m_AL.source, AL_BUFFER, m_AL.buffer);
-//  alSourcei(m_AL.source, AL_LOOPING, AL_TRUE );
-  Play();
   return 0;
 }
 
-float CWav::Get(float time){
-  int index = static_cast<int>( time * m_PCM.sample_per_sec );
-  index = ( index > m_PCM.length ) ? m_PCM.length : index;
-  return ((double)m_PCM.raw[index*2] + (double)m_PCM.raw[index*2+1]) / 32768.0f / 2.0f;
+int CWav::GetStream(const char* fn, float time) {
+
 }
 
-float CWav::GetPlayedTime(){
+float CWav::GetPlayedTime() {
   ALfloat sec = 0.0f;
   if (m_AL.source){
     alGetSourcef(m_AL.source, AL_SEC_OFFSET, &sec);

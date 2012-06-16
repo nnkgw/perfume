@@ -15,6 +15,8 @@ public:
   ~CWav();
   int   Load(const char* fn);
   float Get(float time);
+  int   GetHeader(const char* fn, long* length, long* sample_per_sec, float* play_time, long* raw_offset);
+  int   GetStream(const char* fn, float time);
   float GetPlayedTime();
   void  Play();
 private:
@@ -23,6 +25,7 @@ private:
     long    length;
     long    sample_per_sec;
     float   play_time;
+    long    raw_offset;
   };
   struct sAL{
     ALCdevice*  device;
