@@ -10,14 +10,6 @@ CWav::CWav() {
 }
 
 CWav::~CWav() {
-  if (m_PCM.L) {
-    free(m_PCM.L);
-    m_PCM.L = 0;
-  }
-  if (m_PCM.R) {
-    free(m_PCM.R);
-    m_PCM.R = 0;
-  }
   if (m_PCM.raw) {
     free(m_PCM.raw);
     m_PCM.raw = 0;
@@ -61,17 +53,13 @@ int CWav::Load(const char* fn) {
   fread(&data_chunk_size, 4, 1, fp);
   m_PCM.length = data_chunk_size/4;
   m_PCM.play_time = m_PCM.length / fmt_bytes_per_sec;
-  m_PCM.L = (double*)malloc(m_PCM.length * sizeof(double));
-  m_PCM.R = (double*)malloc(m_PCM.length * sizeof(double));
   m_PCM.raw = (short*)malloc(m_PCM.length * 2 * sizeof(short));
   int idx = 0;
   for(int i = 0; i < m_PCM.length; i++) {
     short data;
     fread(&data, 2, 1, fp);
-    m_PCM.L[i] = (double)data / 32768.0;
     m_PCM.raw[idx++] = data;
     fread(&data, 2, 1, fp);
-    m_PCM.R[i] = (double)data / 32768.0;
     m_PCM.raw[idx++] = data;
   }
   fclose(fp);
@@ -91,7 +79,7 @@ int CWav::Load(const char* fn) {
 float CWav::Get(float time){
   int index = static_cast<int>( time * m_PCM.sample_per_sec );
   index = ( index > m_PCM.length ) ? m_PCM.length : index;
-  return (m_PCM.L[index] + m_PCM.R[index]) / 2.0f;
+  return ((double)m_PCM.raw[index*2] + (double)m_PCM.raw[index*2+1]) / 32768.0f / 2.0f;
 }
 
 float CWav::GetPlayedTime(){

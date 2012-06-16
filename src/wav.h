@@ -19,8 +19,6 @@ public:
   void  Play();
 private:
   struct sPCM{
-    double* L;
-    double* R;
     short*  raw;
     long    length;
     long    sample_per_sec;
