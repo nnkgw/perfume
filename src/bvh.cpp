@@ -2,13 +2,15 @@
 #include <stdio.h>
 #include <vector>
 
-#include "BVH.h"
+#include "bvh.h"
 
 #if defined(WIN32)
 #include <GL/glut.h>
 #elif defined(__APPLE__) || defined(MACOSX)
 #include <GLUT/glut.h>
-#endif
+#else
+#include <GL/glut.h>
+#endif // linux
 
 CBVH::CBVH()
 : m_ChannelNum(0)
