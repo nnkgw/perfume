@@ -18,6 +18,7 @@ jobs:
       run: |
         sudo apt-get install freeglut3-dev
         sudo apt-get install libopenal-dev
+
     - name: cmake build
       run: |
         mkdir build
