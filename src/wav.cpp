@@ -4,6 +4,10 @@
 #include <math.h>
 #include "wav.h"
 
+#if defined(WIN32)
+#pragma warning(disable:4996)
+#endif
+
 CWav::CWav() {
   memset(&m_PCM, 0, sizeof(sPCM));
   memset(&m_AL,  0, sizeof(m_AL));
@@ -51,7 +55,7 @@ int CWav::Load(const char* fn) {
 float CWav::Get(float time) {
   int index = static_cast<int>( time * m_PCM.sample_per_sec );
   index = ( index > m_PCM.length ) ? m_PCM.length : index;
-  return ((double)m_PCM.raw[index*2] + (double)m_PCM.raw[index*2+1]) / 32768.0f / 2.0f;
+  return ((float)m_PCM.raw[index*2] + (float)m_PCM.raw[index*2+1]) / 32768.0f / 2.0f;
 }
 
 int CWav::GetHeader(const char* fn, int* length, int* sample_per_sec, float* play_time, int* raw_offset) {
@@ -85,7 +89,7 @@ int CWav::GetHeader(const char* fn, int* length, int* sample_per_sec, float* pla
   int data_chunk_size;
   fread(&data_chunk_size, 4, 1, fp);
   *length = data_chunk_size / 4;
-  *play_time = *length / fmt_bytes_per_sec;
+  *play_time = *length / (float)fmt_bytes_per_sec;
   *sample_per_sec = fmt_samples_per_sec;
   *raw_offset = ftell(fp);
   fclose(fp);
