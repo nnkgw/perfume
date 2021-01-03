@@ -54,27 +54,27 @@ float CWav::Get(float time) {
   return ((double)m_PCM.raw[index*2] + (double)m_PCM.raw[index*2+1]) / 32768.0f / 2.0f;
 }
 
-int CWav::GetHeader(const char* fn, long* length, long* sample_per_sec, float* play_time, long* raw_offset) {
+int CWav::GetHeader(const char* fn, int* length, int* sample_per_sec, float* play_time, int* raw_offset) {
   FILE* fp = fopen(fn, "rb");
   if (!fp) { return -1; }
   char riff_chunk_id[4];
   fread(riff_chunk_id, 1, 4, fp); // RIFF
-  long riff_chunk_size;
+  int riff_chunk_size;
   fread(&riff_chunk_size, 4, 1, fp); // file size -8
   char riff_form_type[4];
   fread(riff_form_type, 1, 4, fp);  // WAVE
   char fmt_chunk_ID[4];
   fread(&fmt_chunk_ID, 1, 4, fp);   // "fmt "
-  unsigned long fmt_chunk_size;
+  unsigned int fmt_chunk_size;
   fread(&fmt_chunk_size, 4, 1, fp);
   short fmt_wave_format_type;
   fread(&fmt_wave_format_type, 2, 1, fp);
   short fmt_channel;
   fread(&fmt_channel, 2, 1, fp);
-  long fmt_samples_per_sec;
+  int fmt_samples_per_sec;
   fread(&fmt_samples_per_sec, 4, 1, fp);
   m_PCM.sample_per_sec = fmt_samples_per_sec;
-  long fmt_bytes_per_sec;
+  int fmt_bytes_per_sec;
   fread(&fmt_bytes_per_sec, 4, 1, fp);
   short fmt_block_size;
   fread(&fmt_block_size, 2, 1, fp);
@@ -82,7 +82,7 @@ int CWav::GetHeader(const char* fn, long* length, long* sample_per_sec, float* p
   fread(&fmt_bits_per_sample, 2, 1, fp);
   char data_chunk_ID[4];
   fread(data_chunk_ID, 1, 4, fp);
-  long data_chunk_size;
+  int data_chunk_size;
   fread(&data_chunk_size, 4, 1, fp);
   *length = data_chunk_size / 4;
   *play_time = *length / fmt_bytes_per_sec;
@@ -92,7 +92,7 @@ int CWav::GetHeader(const char* fn, long* length, long* sample_per_sec, float* p
   return 0;
 }
 
-int CWav::GetStream(const char* fn, long offset, short* buffer, int size) {
+int CWav::GetStream(const char* fn, int offset, short* buffer, int size) {
   FILE* fp = fopen(fn, "rb");
   if (!fp) { return -1; }
   fseek(fp, offset, SEEK_SET);

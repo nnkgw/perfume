@@ -18,17 +18,17 @@ public:
   ~CWav();
   int   Load(const char* fn);
   float Get(float time);
-  int   GetHeader(const char* fn, long* length, long* sample_per_sec, float* play_time, long* raw_offset);
-  int   GetStream(const char* fn, long offset, short* buffer, int size);
+  int   GetHeader(const char* fn, int* length, int* sample_per_sec, float* play_time, int* raw_offset);
+  int   GetStream(const char* fn, int offset, short* buffer, int size);
   float GetPlayedTime();
   void  Play();
 private:
   struct sPCM{
     short*  raw;
-    long    length;
-    long    sample_per_sec;
+    int     length;
+    int     sample_per_sec;
     float   play_time;
-    long    raw_offset;
+    int     raw_offset;
   };
   struct sAL{
     ALCdevice*  device;
