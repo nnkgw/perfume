@@ -171,6 +171,12 @@ void idle(){
   glutPostRedisplay();
 }
 
+void keyboard(unsigned char key, int x , int y){
+  switch(key) {
+  case 27: exit(0); break; // esc
+  }
+}
+
 int main(int argc, char* argv[]){
   glutInit(&argc, argv);
   glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
@@ -180,6 +186,7 @@ int main(int argc, char* argv[]){
   glutReshapeFunc(reshape);
   glutDisplayFunc(display);
   glutIdleFunc(idle);
+  glutKeyboardFunc(keyboard);
   glutMainLoop();
   return 0;
 }
