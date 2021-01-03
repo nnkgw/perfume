@@ -1,3 +1,6 @@
+build status
+[![windows](https://github.com/nnkgw/perfume/workflows/windows/badge.svg)](https://github.com/nnkgw/perfume/actions?query=workflow%3Awindows)
+
 perfume global site project c++ sample code
 ---------------
 [Perfume GLOBAL SITE]
