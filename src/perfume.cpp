@@ -1,4 +1,5 @@
 #if defined(WIN32)
+#pragma warning(disable:4996)
 #ifdef NDEBUG
 #pragma comment(linker, "/subsystem:\"windows\" /entry:\"mainCRTStartup\"")
 #endif // _DEBUG
@@ -120,7 +121,7 @@ void display(void){
     int frame = static_cast<int>(g_Model[ i ].time / g_Model[ i ].bvh->GetFrameTime());
     if (frame > g_Model[i].bvh->GetFrameNum()){
       frame -= g_Model[i].bvh->GetFrameNum();
-      g_Model[i].time = frame * g_Model[i].bvh->GetFrameTime();
+      g_Model[i].time = frame * float(g_Model[i].bvh->GetFrameTime());
       g_Sound.wav->Play();
     }
     g_Model[i].bvh->RenderPosture(frame, 0.01f, &material[i]);
@@ -162,7 +163,7 @@ void reshape(int w, int h) {
 
 void idle(){
   static float old_time = 0.0f;
-         float now_time = static_cast<float>(glutGet(GLUT_ELAPSED_TIME)) * 0.001; // msec
+         float now_time = static_cast<float>(glutGet(GLUT_ELAPSED_TIME)) * 0.001f; // msec
   for(int i = 0; i < eModelNum; i++){
     g_Model[i].time += (now_time - old_time);
   }

@@ -5,6 +5,7 @@
 #include "bvh.h"
 
 #if defined(WIN32)
+#pragma warning(disable:4996)
 #include <GL/glut.h>
 #elif defined(__APPLE__) || defined(MACOSX)
 #include <GLUT/glut.h>
@@ -60,7 +61,7 @@ int CBVH::Load(const char* fn) {
     if ((strcmp(token, "ROOT" ) == 0) ||
         (strcmp(token, "JOINT") == 0)) {
       new_joint = new sJoint();
-      new_joint->index = m_Joints.size();
+      new_joint->index = (int)m_Joints.size();
       new_joint->parent = joint;
       new_joint->has_site = false;
       new_joint->offset[0] = 0.0;
@@ -115,7 +116,7 @@ int CBVH::Load(const char* fn) {
       for (unsigned int i = 0; i < joint->channels.size(); i++) {
         sChannel* channel = new sChannel();
         channel->joint = joint;
-        channel->index = m_Channels.size();
+        channel->index = (int)m_Channels.size();
         token = strtok(NULL, SEPARATER);
         if (       strcmp(token, "Xrotation") == 0) {
           channel->type = X_ROTATION;
@@ -149,7 +150,7 @@ int CBVH::Load(const char* fn) {
     fgets(line, BUFFER_SIZE, fp);
     scan_num = sscanf(line, "Frame Time: %lf", &m_FrameTime);
     if (scan_num == 1) {
-      m_ChannelNum = m_Channels.size();
+      m_ChannelNum = (int)m_Channels.size();
       m_Motion = new double[ m_FrameNum * m_ChannelNum ];
       for (int i = 0; i < m_FrameNum; i++) {
         fgets(line, BUFFER_SIZE, fp);
@@ -174,34 +175,34 @@ void CBVH::RenderPosture(int frame_no, float scale, sMaterial* material) {
 void CBVH::RenderJoint(const sJoint* joint, const double* data, float scale, sMaterial* material) {
   glPushMatrix();
   if (joint->parent == 0) {
-    glTranslatef(data[0] * scale, data[1] * scale, data[2] * scale);
+    glTranslatef((float)data[0] * scale, (float)data[1] * scale, (float)data[2] * scale);
   } else {
-    glTranslatef(joint->offset[0] * scale, joint->offset[1] * scale, joint->offset[2] * scale);
+    glTranslatef((float)joint->offset[0] * scale, (float)joint->offset[1] * scale, (float)joint->offset[2] * scale);
   }
   for (unsigned int i = 0; i < joint->channels.size(); i++) {
     sChannel* channel = joint->channels[i];
     if (       channel->type == X_ROTATION) {
-      glRotatef(data[ channel->index ], 1.0f, 0.0f, 0.0f);
+      glRotatef((float)data[ channel->index ], 1.0f, 0.0f, 0.0f);
     } else if (channel->type == Y_ROTATION) {
-      glRotatef(data[ channel->index ], 0.0f, 1.0f, 0.0f);
+      glRotatef((float)data[ channel->index ], 0.0f, 1.0f, 0.0f);
     } else if (channel->type == Z_ROTATION) {
-      glRotatef(data[ channel->index ], 0.0f, 0.0f, 1.0f);
+      glRotatef((float)data[ channel->index ], 0.0f, 0.0f, 1.0f);
     }
   }
   if (joint->children.size() == 0) {
-    RenderBone(0.0f, 0.0f, 0.0f, joint->site[ 0 ] * scale, joint->site[ 1 ] * scale, joint->site[ 2 ] * scale, material);
+    RenderBone(0.0f, 0.0f, 0.0f, (float)joint->site[ 0 ] * scale, (float)joint->site[ 1 ] * scale, (float)joint->site[ 2 ] * scale, material);
   }
   if (joint->children.size() == 1) {
     sJoint*  child = joint->children[0];
-    RenderBone(0.0f, 0.0f, 0.0f, child->offset[ 0 ] * scale, child->offset[ 1 ] * scale, child->offset[ 2 ] * scale, material);
+    RenderBone(0.0f, 0.0f, 0.0f, (float)child->offset[ 0 ] * scale, (float)child->offset[ 1 ] * scale, (float)child->offset[ 2 ] * scale, material);
   }
   if (joint->children.size() > 1) {
     float center[ 3 ] = { 0.0f, 0.0f, 0.0f };
     for (unsigned int i = 0; i < joint->children.size(); i++) {
       sJoint* child = joint->children[ i ];
-      center[ 0 ] += child->offset[ 0 ];
-      center[ 1 ] += child->offset[ 1 ];
-      center[ 2 ] += child->offset[ 2 ];
+      center[ 0 ] += (float)child->offset[ 0 ];
+      center[ 1 ] += (float)child->offset[ 1 ];
+      center[ 2 ] += (float)child->offset[ 2 ];
     }
     center[ 0 ] /= joint->children.size() + 1;
     center[ 1 ] /= joint->children.size() + 1;
@@ -209,8 +210,8 @@ void CBVH::RenderJoint(const sJoint* joint, const double* data, float scale, sMa
     RenderBone(0.0f, 0.0f, 0.0f, center[ 0 ] * scale, center[ 1 ] * scale, center[ 2 ] * scale, material);
     for (unsigned int i = 0; i < joint->children.size(); i++) {
       sJoint*  child = joint->children[ i ];
-      RenderBone(       center[0] * scale,        center[1] * scale,        center[2] * scale,
-                 child->offset[0] * scale, child->offset[1] * scale, child->offset[2] * scale, material);
+      RenderBone(              center[0] * scale,               center[1] * scale,                         center[2] * scale,
+                 (float)child->offset[0] * scale, (float)child->offset[1] * scale, (float)child->offset[2] * scale, material);
     }
   }
   for (unsigned int i = 0; i < joint->children.size(); i++) {
