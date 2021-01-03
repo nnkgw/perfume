@@ -10,7 +10,9 @@ add_executable(perfume
 
 if (WIN32)
 set(OPENGL_LIBRARY_DIR "${PROJECT_SOURCE_DIR}/freeglut/lib/x64")
-set(GLUT_INCLUDE_DIR ${PROJECT_SOURCE_DIR}freeglut/include)
+set(GLUT_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/freeglut/include)
+set(OPENAL_LIBRARY "${PROJECT_SOURCE_DIR}/openal-soft-1.21.0-bin/libs/Win64/OpenAL32.lib")
+set(OPENAL_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/openal-soft-1.21.0-bin/include/AL)
 endif()
 
 if(MSVC)
@@ -23,6 +25,7 @@ find_package(OpenAL REQUIRED)
 
 if (WIN32)
 include_directories( ${PROJECT_SOURCE_DIR}/freeglut/include )
+include_directories( ${PROJECT_SOURCE_DIR}/openal-soft-1.21.0-bin/include/AL )
 else()
 include_directories( ${OPENGL_INCLUDE_DIRS} ${GLUT_INCLUDE_DIRS} )
 endif()

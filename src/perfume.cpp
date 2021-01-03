@@ -1,7 +1,5 @@
 #if defined(WIN32)
-#pragma comment(lib,"glut32.lib")
-#pragma comment(lib,"OpenAL32.lib")
-#ifndef _DEBUG
+#ifdef NDEBUG
 #pragma comment(linker, "/subsystem:\"windows\" /entry:\"mainCRTStartup\"")
 #endif // _DEBUG
 #endif // WIN32
