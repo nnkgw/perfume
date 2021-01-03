@@ -18,14 +18,13 @@ jobs:
       run: curl -s -O https://www.transmissionzero.co.uk/files/software/development/GLUT/freeglut-MSVC-3.0.0-2.mp.zip
 
     - name: setup freeglut
-      run: |
-        7z.exe x -y freeglut-MSVC-3.0.0-2.mp.zip
+      run: 7z.exe x -y freeglut-MSVC-3.0.0-2.mp.zip
 
     - name: download OpenAL Soft
       run: curl -s -O https://openal-soft.org/openal-binaries/openal-soft-1.21.0-bin.zip
 
     - name: setup OpenAL Soft
-        7z.exe x -y openal-soft-1.21.0-bin.zip   
+      run: 7z.exe x -y openal-soft-1.21.0-bin.zip   
 
     - name: cmake build
       run: |
