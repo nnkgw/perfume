@@ -24,7 +24,7 @@ jobs:
       run: curl -s -O https://openal-soft.org/openal-binaries/openal-soft-1.21.0-bin.zip
 
     - name: setup OpenAL Soft
-      run: 7z.exe x -y openal-soft-1.21.0-bin.zip   
+      run: 7z.exe x -y openal-soft-1.21.0-bin.zip
 
     - name: cmake build
       run: |
